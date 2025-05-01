@@ -1,10 +1,143 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Pawn Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-light py-5">
+<div class="container">
+    <div class="card shadow p-4">
+        <h2 class="mb-4 text-center">Pawn's month calculator</h2>
 
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Pawn Date:</label>
+                <input type="date" class="form-control" id="pawnDate">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Pawn Amount:</label>
+                <input type="number" class="form-control" id="pawnAmount" placeholder="Insert the amount">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Months Paid:</label>
+                <input type="number" class="form-control" id="monthsPaid" value="0">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">The initial amount was reduced?</label>
+                <select class="form-select" id="initialAmountReduced">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="border-top pt-3 mt-3">
+            <h5>Settings</h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Monthly interest (%):</label>
+                    <input type="number" class="form-control" id="monthlyInterest" value="10">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Days of Grace:</label>
+                    <input type="number" class="form-control" id="daysGrace" value="3">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Current Day (optional):</label>
+                <input type="date" class="form-control" id="currentDate">
+            </div>
+        </div>
+
+        <div class="d-grid gap-2">
+            <button class="btn btn-success" onclick="calculateMonths()">Calculate</button>
+            <button class="btn btn-danger" onclick="resetFields()">Reset</button>
+        </div>
+
+        <div class="alert alert-info mt-4" id="result"></div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('currentDate').valueAsDate = new Date();
+
+    function calculateMonths() {
+        const amount = parseFloat(document.getElementById('pawnAmount').value);
+        const pawnDate = new Date(document.getElementById('pawnDate').value);
+        const currentDateInput = document.getElementById('currentDate').value;
+        const interest = parseFloat(document.getElementById('monthlyInterest').value);
+        let daysGrace = parseInt(document.getElementById('daysGrace').value);
+        const initialAmountReduced = document.getElementById('initialAmountReduced').value;
+        const monthsPaid = parseInt(document.getElementById('monthsPaid').value);
+
+        if (initialAmountReduced === 'yes') daysGrace = 0;
+
+        let today = currentDateInput ? new Date(currentDateInput) : new Date();
+
+        if (isNaN(pawnDate.getTime())) {
+            document.getElementById('result').innerText = "Please enter valid date.";
+            return;
+        }
+
+        if (isNaN(amount)) {
+            document.getElementById('result').innerText = "Please enter valid quantity.";
+            return;
+        }
+
+        let startMonthDate = new Date(pawnDate);
+        startMonthDate.setDate(1);
+        let currentDate = new Date(today);
+        currentDate.setDate(1);
+
+        let months = (currentDate.getFullYear() - startMonthDate.getFullYear()) * 12;
+        months += currentDate.getMonth() - startMonthDate.getMonth();
+
+        const pawnDateDate = pawnDate.getDate();
+        const todayDate = today.getDate();
+
+        if (months === 0) daysGrace = 0;
+
+        let haveDaysGrace = false;
+        if (daysGrace > 0 && todayDate <= (pawnDateDate + daysGrace)) {
+            haveDaysGrace = true;
+        } else {
+            months++;
+        }
+
+        if (months < 0) months = 0;
+
+        let monthOwed = months - monthsPaid;
+        if (monthOwed < 0) monthOwed = 0;
+
+        const totalInterestPercent = (interest / 100) * monthOwed;
+        const moneyInterest = amount * totalInterestPercent;
+        const totalToPay = amount + moneyInterest;
+
+        document.getElementById('result').innerHTML = `
+        Owe <strong>${monthOwed}</strong> month(s).<br>
+        ${haveDaysGrace ? '<span class="text-success">Have grace day.</span><br>' : '<span class="text-danger">The client has no days of grace.</span><br>'}
+        Total interest: <strong>${totalInterestPercent.toFixed(2)} times the initial amount</strong>.<br>
+        Money interest: <strong>$${moneyInterest.toFixed(2)}</strong>.<br>
+        Total to pay (principal + interests): <strong>$${totalToPay.toFixed(2)}</strong>.
+      `;
+    }
+
+    function resetFields() {
+        document.getElementById('pawnAmount').value = '';
+        document.getElementById('pawnDate').value = '';
+        document.getElementById('monthsPaid').value = 0;
+        document.getElementById('initialAmountReduced').value = 'no';
+        document.getElementById('monthlyInterest').value = 10;
+        document.getElementById('daysGrace').value = 3;
+        document.getElementById('currentDate').valueAsDate = new Date();
+        document.getElementById('result').innerHTML = '';
+    }
+
+</script>
 </body>
 </html>
