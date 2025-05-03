@@ -27,6 +27,7 @@
                         class="form-control"
                         id="pawnAmount"
                         placeholder="Insert the amount"
+                        value="1000"
                 />
             </div>
         </div>
@@ -118,25 +119,19 @@
         let currentDateInputFixed = new Date(yearCurrentDateInput, monthCurrentDateInput - 1, dayCurrentDateInput);
         const interest = parseFloat(document.getElementById("monthlyInterest").value);
         let daysGrace = parseInt(document.getElementById("daysGrace").value);
-        const initialAmountReduced = document.getElementById(
-            "initialAmountReduced"
-        ).value;
-        const monthsPaid = parseInt(
-            document.getElementById("monthsPaid").value
-        );
+        const initialAmountReduced = document.getElementById("initialAmountReduced").value;
+        const monthsPaid = parseInt(document.getElementById("monthsPaid").value);
 
         if (initialAmountReduced === "yes") daysGrace = 0;
         let today = currentDateInputFixed ? new Date(currentDateInputFixed) : new Date();
 
         if (isNaN(pawnDateFixed.getTime())) {
-            document.getElementById("result").innerText =
-                "Please enter valid date.";
+            document.getElementById("result").innerText = "Please enter valid date.";
             return;
         }
 
         if (isNaN(amount)) {
-            document.getElementById("result").innerText =
-                "Please enter valid quantity.";
+            document.getElementById("result").innerText = "Please enter valid quantity.";
             return;
         }
 
@@ -149,7 +144,6 @@
         months += currentDate.getMonth() - startMonthDate.getMonth();
 
         const pawnDateDate = pawnDateFixed.getDate();
-        const todayDate = today.getDate();
 
         if (months === 0) daysGrace = 0;
 
@@ -161,7 +155,6 @@
         //## Format the dates
         pawnDaysGrace = formatter.format(pawnDaysGrace);
         currentDateInputFixed = formatter.format(currentDateInputFixed);
-        pawnDateFixed = formatter.format(pawnDateFixed);
 
         console.log(`currentDateInputFixed: ${currentDateInputFixed}`)
         console.log(`pawnDateDate: ${pawnDateDate}`)
@@ -185,23 +178,21 @@
 
         console.log(`monthOwedLast: ${monthOwed}`)
 
-        const totalInterestPercent = (interest / 100) * monthOwed;
         const monthlyPaid = Math.ceil(amount <= 50 ? 5 : amount * (interest / 100));
         const moneyInterest = monthOwed * monthlyPaid;
         const totalToPay = amount + moneyInterest;
-        
+
         const result = `
         Owe <strong>${monthOwed}</strong> month(s).<br>
         ${
-                haveDaysGrace
-                        ? '<span class="text-success">Have grace day.</span><br>'
-                        : ""
+            haveDaysGrace
+                ? '<span class="text-success">Have grace day.</span><br>'
+                : ""
         }
         Monthly paid: <strong>$${monthlyPaid.toFixed(2)}</strong><br>
         Money interest: <strong>$${moneyInterest.toFixed(2)}</strong><br>
         Total to pay ($${amount.toFixed(2)} + $${moneyInterest.toFixed(2)}): <strong>$${totalToPay.toFixed(2)}</strong>
       `;
-
         document.getElementById("resultInit").innerHTML = result
         document.getElementById("resultLast").innerHTML = result
     }
