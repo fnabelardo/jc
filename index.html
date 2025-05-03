@@ -94,19 +94,29 @@
     document.getElementById("pawnDate").valueAsDate = new Date();
     document.getElementById("currentDate").valueAsDate = new Date();
 
+    //## Set the default time zone (America/New_York) 
+    const options = {
+        timeZone: 'America/New_York',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+
+    const formatter = new Intl.DateTimeFormat('es-ES', options);    
+
     function calculateMonths() {
         const amount = parseFloat(document.getElementById("pawnAmount").value);
-        
+
         const pawnDate = document.getElementById("pawnDate").value;
         const [yearPawnDate, monthPawnDate, dayPawnDate] = pawnDate.split('-').map(Number);
-        const pawnDateFixed = new Date(yearPawnDate, monthPawnDate - 1, dayPawnDate);
-        
+        let pawnDateFixed = new Date(yearPawnDate, monthPawnDate - 1, dayPawnDate);
+
         const currentDateInput = document.getElementById("currentDate").value;
-      const [yearCurrentDateInput, monthCurrentDateInput, dayCurrentDateInput] = currentDateInput.split('-').map(Number);
-      const currentDateInputFixed = new Date(yearCurrentDateInput, monthCurrentDateInput - 1, dayCurrentDateInput);
-        const interest = parseFloat(
-            document.getElementById("monthlyInterest").value
-        );
+        const [yearCurrentDateInput, monthCurrentDateInput, dayCurrentDateInput] = currentDateInput.split('-').map(Number);
+        let currentDateInputFixed = new Date(yearCurrentDateInput, monthCurrentDateInput - 1, dayCurrentDateInput);
+        const interest = parseFloat(document.getElementById("monthlyInterest").value);
         let daysGrace = parseInt(document.getElementById("daysGrace").value);
         const initialAmountReduced = document.getElementById(
             "initialAmountReduced"
@@ -117,7 +127,7 @@
 
         if (initialAmountReduced === "yes") daysGrace = 0;
         let today = currentDateInputFixed ? new Date(currentDateInputFixed) : new Date();
-        
+
         if (isNaN(pawnDateFixed.getTime())) {
             document.getElementById("result").innerText =
                 "Please enter valid date.";
@@ -135,8 +145,7 @@
         let currentDate = new Date(today);
         currentDate.setDate(1);
 
-        let months =
-            (currentDate.getFullYear() - startMonthDate.getFullYear()) * 12;
+        let months = (currentDate.getFullYear() - startMonthDate.getFullYear()) * 12;
         months += currentDate.getMonth() - startMonthDate.getMonth();
 
         const pawnDateDate = pawnDateFixed.getDate();
@@ -145,24 +154,36 @@
         if (months === 0) daysGrace = 0;
 
         let haveDaysGrace = false;
+        let pawnDaysGrace = new Date(pawnDateFixed);
+        //## Set the full date
+        pawnDaysGrace.setFullYear(currentDateInputFixed.getFullYear(), currentDateInputFixed.getMonth(), currentDateInputFixed.getDate());
         
-        console.log(`todayDate: ${todayDate}`)
+        //## Format the dates
+        pawnDaysGrace = formatter.format(pawnDaysGrace);
+        currentDateInputFixed = formatter.format(currentDateInputFixed);
+        pawnDateFixed = formatter.format(pawnDateFixed);
+
+        console.log(`currentDateInputFixed: ${currentDateInputFixed}`)
         console.log(`pawnDateDate: ${pawnDateDate}`)
-        console.log(`pawnDateDate + daysGrace: ${pawnDateDate + daysGrace}`)
+        console.log(`pawnDateFixed + daysGrace: ${pawnDaysGrace}`)
+        console.log(`haveDaysGrace: ${haveDaysGrace}`)
 
-        if (
-            daysGrace > 0 &&
-            todayDate > pawnDateDate &&
-            todayDate <= pawnDateDate + daysGrace 
-        ) {
-            haveDaysGrace = true;
-        }
-
+        //## Months owed
         if (months <= 0) months = 1;
         let monthOwed = months - monthsPaid;
         if (monthOwed < 0) monthOwed = 1;
 
-        console.log(`monthOwed: ${monthOwed}`)
+        if (
+            daysGrace > 0 && currentDateInputFixed <= pawnDaysGrace
+        ) {
+            haveDaysGrace = true;
+        }
+
+        console.log(`monthOwedInit: ${monthOwed}`)
+
+        monthOwed = haveDaysGrace && monthOwed > 1 ? monthOwed - 1 : monthOwed;
+
+        console.log(`monthOwedLast: ${monthOwed}`)
 
         const totalInterestPercent = (interest / 100) * monthOwed;
         const monthlyPaid = Math.ceil(amount <= 50 ? 5 : amount * (interest / 100));
