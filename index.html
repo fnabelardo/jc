@@ -1,97 +1,199 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8"/>
-    <title>Pawn Calculator</title>
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-    />
+    <meta charset="UTF-8">
+    <title>Jewelry Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-light py-5">
+<body class="bg-light py-4">
 <div class="container">
-    <div class="card shadow p-4">
-        <h2 class="text-center">Pawn's month calculator</h2>
-
-        <div class="alert alert-info" id="resultInit"></div>
-
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label class="form-label">Pawn Date:</label>
-                <input type="date" class="form-control" id="pawnDate"/>
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Pawn Amount:</label>
-                <input
-                        type="number"
-                        class="form-control"
-                        id="pawnAmount"
-                        placeholder="Insert the amount"
-                        value="1000"
-                />
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label class="form-label">Months Paid:</label>
-                <input
-                        type="number"
-                        class="form-control"
-                        id="monthsPaid"
-                        value="0"
-                />
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">The initial amount was reduced?</label>
-                <select class="form-select" id="initialAmountReduced">
-                    <option value="no">No</option>
-                    <option value="yes">Yes</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="border-top pt-3 mt-3">
-            <h5>Settings</h5>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label">Monthly interest (%):</label>
-                    <input
-                            type="number"
-                            class="form-control"
-                            id="monthlyInterest"
-                            value="10"
-                    />
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Days of Grace:</label>
-                    <input
-                            type="number"
-                            class="form-control"
-                            id="daysGrace"
-                            value="3"
-                    />
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Current Day (optional):</label>
-                <input type="date" class="form-control" id="currentDate"/>
-            </div>
-        </div>
-
-        <div class="d-grid gap-2">
-            <button class="btn btn-success" onclick="calculateMonths()">
-                Calculate
+    <ul class="nav nav-tabs" id="mainTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="jewelry-tab" data-bs-toggle="tab" data-bs-target="#jewelry"
+                    type="button"
+                    role="tab">Jewelry Details Calculator <!-- ## -->
             </button>
-            <button class="btn btn-danger" onclick="resetFields()">Reset</button>
+        </li>
+        <!--## Pawn Calculator -->
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pawn-tab" data-bs-toggle="tab" data-bs-target="#pawn" type="button"
+                    role="tab">Pawn Calculator
+            </button>
+        </li>
+        <!--## END Pawn Calculator -->
+    </ul>
+
+    <div class="tab-content pt-4">
+        <!-- Tab 1: Jewelry Details Calculator --> <!-- ## -->
+        <div class="tab-pane fade show active" id="jewelry" role="tabpanel">
+            <!-- Section 1 --> <!-- ## -->
+            <div class="mb-3">
+                <label for="totalAmount" class="form-label">Total Amount ($)</label>
+                <input type="number" class="form-control" id="totalAmount" placeholder="Ex: 300">
+            </div>
+
+            <!-- Section 2 --> <!-- ## -->
+            <h5>Kt detail</h5> <!-- ## -->
+            <div id="ktContainer">
+                <!-- ## -->
+                <div class="row g-2 align-items-end mb-2">
+                    <div class="col">
+                        <label for="qty-dwt-number">Qty. dwt</label>
+                        <input type="number" class="form-control dwt" id="qty-dwt-number" placeholder="Ex: 10">
+                    </div>
+                    <div class="col">
+                        <label for="kt-select-kt">Kt</label>
+                        <select class="form-select kt" id="kt-select-kt">
+                            <option value="10kt">10kt</option>
+                            <option value="10kt scrap">10kt scrap</option>
+                            <option value="14kt">14kt</option>
+                            <option value="14kt scrap">14kt scrap</option>
+                            <option value="18kt">18kt</option>
+                            <option value="18kt scrap">18kt scrap</option>
+                            <option value="22kt">22kt</option>
+                            <option value="22kt scrap">22kt scrap</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label>$</label>
+                        <input type="number" class="form-control amount" placeholder="Ex: 150">
+                    </div>
+                    <div class="col">
+                        <label>dwt/kt</label>
+                        <span class="form-control-plaintext dwtPerKt">= $0</span>
+                    </div>
+                </div>
+                <!-- ## -->
+
+            </div>
+            <button class="btn btn-outline-primary btn-sm my-2" onclick="addKtRow()">+ Add Kt</button> <!-- ## -->
+
+            <!-- Section 3 --> <!-- ## -->
+            <h5 class="mt-4">Jewelry</h5> <!-- ## -->
+            <div id="jewelryContainer">
+                <div class="row g-2 align-items-end mb-2">
+                    <div class="col-auto">
+                        <label>1.</label>
+                    </div>
+                    <div class="col">
+                        <label for="qty-number">Qty. dwt</label>
+                        <input type="number" id="qty-number" class="form-control dwt">
+                    </div>
+                    <div class="col">
+                        <label for="jewelry-kt-select">Kt</label>
+                        <select class="form-select kt" id="jewelry-kt-select">
+                            <option value="10kt">10kt</option>
+                            <option value="10kt scrap">10kt scrap</option>
+                            <option value="14kt">14kt</option>
+                            <option value="14kt scrap">14kt scrap</option>
+                            <option value="18kt">18kt</option>
+                            <option value="18kt scrap">18kt scrap</option>
+                            <option value="22kt">22kt</option>
+                            <option value="22kt scrap">22kt scrap</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label>$</label>
+                        <span class="form-control-plaintext result">$0.00</span>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm my-2" onclick="addJewelryRow()">+ Add Jewelry</button>
+            <!-- ## -->
+
+            <!-- ## -->
+            <button class="btn btn-success mt-1" onclick="calculateJewelry()">Calculate ($) Jewelry</button>
         </div>
 
-        <div class="alert alert-info mt-2" id="resultLast"></div>
+        <!--## Pawn Calculator -->
+        <!-- Tab 2: Pawn Calculator -->
+        <div class="tab-pane fade" id="pawn" role="tabpanel">
+            <div class="card shadow p-4">
+                <h2 class="text-center">Pawn's month calculator</h2>
+
+                <div class="alert alert-info" id="resultInit"></div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Pawn Date:</label>
+                        <input type="date" class="form-control" id="pawnDate"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Pawn Amount:</label>
+                        <input
+                                type="number"
+                                class="form-control"
+                                id="pawnAmount"
+                                placeholder="Insert the amount"
+                                value="1000"
+                        />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Months Paid:</label>
+                        <input
+                                type="number"
+                                class="form-control"
+                                id="monthsPaid"
+                                value="0"
+                        />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">The initial amount was reduced?</label>
+                        <select class="form-select" id="initialAmountReduced">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="border-top pt-3 mt-3">
+                    <h5>Settings</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Monthly interest (%):</label>
+                            <input
+                                    type="number"
+                                    class="form-control"
+                                    id="monthlyInterest"
+                                    value="10"
+                            />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Days of Grace:</label>
+                            <input
+                                    type="number"
+                                    class="form-control"
+                                    id="daysGrace"
+                                    value="3"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Current Day (optional):</label>
+                        <input type="date" class="form-control" id="currentDate"/>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button class="btn btn-success" onclick="calculateMonths()">
+                        Calculate
+                    </button>
+                    <button class="btn btn-danger" onclick="resetFields()">Reset</button>
+                </div>
+
+                <div class="alert alert-info mt-2" id="resultLast"></div>
+            </div>
+        </div>
+        <!--## END Pawn Calculator -->
     </div>
 </div>
 
 <script>
+    //## Pawn Calculator
     document.getElementById("pawnDate").valueAsDate = new Date();
     document.getElementById("currentDate").valueAsDate = new Date();
 
@@ -105,7 +207,7 @@
         minute: '2-digit'
     };
 
-    const formatter = new Intl.DateTimeFormat('es-ES', options);    
+    const formatter = new Intl.DateTimeFormat('es-ES', options);
 
     function calculateMonths() {
         const amount = parseFloat(document.getElementById("pawnAmount").value);
@@ -151,7 +253,7 @@
         let pawnDaysGrace = new Date(pawnDateFixed);
         //## Set the full date
         pawnDaysGrace.setFullYear(currentDateInputFixed.getFullYear(), currentDateInputFixed.getMonth(), currentDateInputFixed.getDate());
-        
+
         //## Format the dates
         pawnDaysGrace = formatter.format(pawnDaysGrace);
         currentDateInputFixed = formatter.format(currentDateInputFixed);
@@ -207,6 +309,148 @@
         document.getElementById("currentDate").valueAsDate = new Date();
         document.getElementById("result").innerHTML = "";
     }
+
+    //## END Pawn Calculator
+
+    // --- Jewelry Details Calculator Code --- <!-- ## -->
+
+    let ktCount = 0;
+    let jewelryCount = 1;
+    let ktPrices = {};
+
+    function addListeners() {
+        const amounts = document.querySelectorAll('.amount');
+        const dwts = document.querySelectorAll('.dwt');
+
+        amounts.forEach(amount => amount.addEventListener('input', updateDwtPrice));
+        dwts.forEach(dwt => dwt.addEventListener('input', updateDwtPrice));
+
+    }
+
+    addListeners();
+
+    function addKtRow() {
+        ktCount++;
+        const ktOptions = ['10kt', '10kt scrap', '14kt', '14kt scrap', '18kt', '18kt scrap', '22kt', '22kt scrap'];
+        const row = document.createElement('div');
+        row.className = 'row g-2 align-items-end mb-2';
+        row.innerHTML = `
+      <div class="col">
+        <label>Qty. dwt</label>
+        <input type="number" class="form-control dwt" placeholder="Ex: 10">
+      </div>
+      <div class="col">
+        <label>Kt</label>
+        <select class="form-select kt">
+          ${ktOptions.map(kt => `<option value="${kt}">${kt}</option>`).join('')}
+        </select>
+      </div>
+      <div class="col">
+        <label>$</label>
+        <input type="number" class="form-control amount" placeholder="Ex: 150">
+      </div>
+      <div class="col">
+        <label>dwt/kt</label>
+        <span class="form-control-plaintext dwtPerKt">= $0</span>
+      </div>
+    `;
+        document.getElementById('ktContainer').appendChild(row);
+        addListeners();
+    }
+
+    <!-- ## -->
+    function updateDwtPrice() {
+        const rows = document.querySelectorAll('#ktContainer .row');
+        const initTotalAmount = parseFloat(document.getElementById('totalAmount').value) || 0;
+        let sum = 0;
+        ktPrices = {};
+
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            const dwt = parseFloat(row.querySelector('.dwt').value) || 0;
+            const amount = parseFloat(row.querySelector('.amount').value) || 0;
+            const kt = row.querySelector('.kt').value;
+            const label = row.querySelector('.dwtPerKt');
+            const pricePerDwt = dwt ? amount / dwt : 0;
+            const totalAmount = calculateTotalKtDetailsAmount();
+            console.log("totalAmount:", totalAmount);
+
+            if (totalAmount > initTotalAmount) {
+                row.querySelector('.amount').value = '';
+                row.querySelector('.dwtPerKt').innerText = '= $0';
+                alert("The KT total amount is bigger than Total Amount.");
+                break; // stops the loop early
+            } else {
+                label.textContent = `= $${pricePerDwt.toFixed(2)}`;
+
+                if (dwt > 0) {
+                    ktPrices[kt] = pricePerDwt;
+                }
+            }
+        }
+        console.log('ktPrices:', ktPrices);
+    }
+
+    function calculateTotalKtDetailsAmount() {
+        let sum = 0;
+        document.querySelectorAll('.amount').forEach(amount => {
+            const value = parseFloat(amount.value);
+            if (!isNaN(value)) {
+                sum += value;
+            }
+        });
+        return sum;
+    }
+
+    <!-- ## -->
+    function addJewelryRow() {
+        jewelryCount++;
+        const ktOptions = ['10kt', '10kt scrap', '14kt', '14kt scrap', '18kt', '18kt scrap', '22kt', '22kt scrap'];
+        const row = document.createElement('div');
+        row.className = 'row g-2 align-items-end mb-2';
+        row.innerHTML = `
+      <div class="col-auto">
+        <label>${jewelryCount}.</label>
+      </div>
+      <div class="col">
+        <label>Qty. dwt</label>
+        <input type="number" class="form-control dwt">
+      </div>
+      <div class="col">
+        <label>Kt</label>
+        <select class="form-select kt">
+          ${ktOptions.map(kt => `<option value="${kt}">${kt}</option>`).join('')}
+        </select>
+      </div>
+      <div class="col">
+        <label>$</label>
+        <span class="form-control-plaintext result">$0.00</span>
+      </div>
+    `;
+        document.getElementById('jewelryContainer').appendChild(row);
+    }
+
+    <!-- ## -->
+    function calculateJewelry() {
+        const rows = document.querySelectorAll('#jewelryContainer .row');
+        rows.forEach(row => {
+            const dwt = parseFloat(row.querySelector('.dwt').value) || 0;
+            const kt = row.querySelector('.kt').value;
+            const result = row.querySelector('.result');
+            const pricePerDwt = ktPrices[kt];
+
+            console.log(ktPrices)
+
+            if (pricePerDwt === undefined) {
+                result.textContent = 'Price not define';
+                return;
+            }
+            result.textContent = `$${(dwt * pricePerDwt).toFixed(2)}`;
+        });
+    }
+    <!-- ## -->
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
