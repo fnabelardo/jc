@@ -8,34 +8,34 @@
 <body class="bg-light py-4" style="font-size: xx-large">
 <div class="container">
     <ul class="nav nav-tabs" id="mainTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="jewelry-tab" data-bs-toggle="tab" data-bs-target="#jewelry"
-                    type="button"
-                    role="tab">Jewelry Details Calculator <!-- ## -->
-            </button>
-        </li>
         <!--## Pawn Calculator -->
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="pawn-tab" data-bs-toggle="tab" data-bs-target="#pawn" type="button"
+            <button class="nav-link active" id="pawn-tab" data-bs-toggle="tab" data-bs-target="#pawn" type="button"
                     role="tab">Pawn Calculator
             </button>
         </li>
         <!--## END Pawn Calculator -->
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="jewelry-tab" data-bs-toggle="tab" data-bs-target="#jewelry"
+                    type="button"
+                    role="tab">Jewelry Details Calculator
+            </button>
+        </li>
     </ul>
 
     <div class="tab-content pt-4">
-        <!-- Tab 1: Jewelry Details Calculator --> <!-- ## -->
-        <div class="tab-pane fade show active" id="jewelry" role="tabpanel">
-            <!-- Section 1 --> <!-- ## -->
+        <!-- Tab 1: Jewelry Details Calculator -->
+        <div class="tab-pane fade" id="jewelry" role="tabpanel">
+            <!-- Section 1 -->
             <div class="mb-3">
                 <label for="totalAmount" class="form-label">Total Amount ($)</label>
                 <input type="number" class="form-control" id="totalAmount" placeholder="Ex: 300">
             </div>
 
-            <!-- Section 2 --> <!-- ## -->
-            <h5>Kt detail</h5> <!-- ## -->
+            <!-- Section 2 -->
+            <h5>Kt detail</h5>
             <div id="ktContainer">
-                <!-- ## -->
+
                 <div class="row g-2 align-items-end mb-2">
                     <div class="col">
                         <label for="qty-dwt-number">Qty. dwt</label>
@@ -63,13 +63,12 @@
                         <span class="form-control-plaintext dwtPerKt">= $0</span>
                     </div>
                 </div>
-                <!-- ## -->
 
             </div>
-            <button class="btn btn-outline-primary btn-sm my-2" onclick="addKtRow()">+ Add Kt</button> <!-- ## -->
+            <button class="btn btn-outline-primary btn-sm my-2" onclick="addKtRow()">+ Add Kt</button>
 
-            <!-- Section 3 --> <!-- ## -->
-            <h5 class="mt-4">Jewelry</h5> <!-- ## -->
+            <!-- Section 3 -->
+            <h5 class="mt-4">Jewelry</h5>
             <div id="jewelryContainer">
                 <div class="row g-2 align-items-end mb-2">
                     <div class="col-auto">
@@ -99,19 +98,17 @@
                 </div>
             </div>
             <button class="btn btn-outline-secondary btn-sm my-2" onclick="addJewelryRow()">+ Add Jewelry</button>
-            <!-- ## -->
 
-            <!-- ## -->
             <button class="btn btn-success mt-1" onclick="calculateJewelry()">Calculate ($) Jewelry</button>
         </div>
 
         <!--## Pawn Calculator -->
         <!-- Tab 2: Pawn Calculator -->
-        <div class="tab-pane fade" id="pawn" role="tabpanel">
+        <div class="tab-pane fade show active" id="pawn" role="tabpanel">
             <div class="card shadow p-4">
                 <h2 class="text-center">Pawn's month calculator</h2>
 
-                <div class="alert alert-info" id="resultInit"></div>
+                <div class="alert alert-info" style="display: none" id="resultInit"></div>
 
                 <div class="row mb-3">
                     <div class="col-md-6">
@@ -125,7 +122,6 @@
                                 class="form-control"
                                 id="pawnAmount"
                                 placeholder="Insert the amount"
-                                value="1000"
                         />
                     </div>
                 </div>
@@ -185,7 +181,6 @@
                     <button class="btn btn-danger" onclick="resetFields()">Reset</button>
                 </div>
 
-                <div class="alert alert-info mt-2" id="resultLast"></div>
             </div>
         </div>
         <!--## END Pawn Calculator -->
@@ -295,8 +290,9 @@
         Money interest: <strong>$${moneyInterest.toFixed(2)}</strong><br>
         Total to pay ($${amount.toFixed(2)} + $${moneyInterest.toFixed(2)}): <strong>$${totalToPay.toFixed(2)}</strong>
       `;
-        document.getElementById("resultInit").innerHTML = result
-        document.getElementById("resultLast").innerHTML = result
+        let resultInit = document.getElementById("resultInit");
+        resultInit.style.display = 'block';
+        resultInit.innerHTML = result;
     }
 
     function resetFields() {
@@ -309,11 +305,9 @@
         document.getElementById("currentDate").valueAsDate = new Date();
         document.getElementById("result").innerHTML = "";
     }
-
     //## END Pawn Calculator
 
-    // --- Jewelry Details Calculator Code --- <!-- ## -->
-
+    // --- Jewelry Details Calculator Code ---
     let ktCount = 0;
     let jewelryCount = 1;
     let ktPrices = {};
@@ -324,7 +318,6 @@
 
         amounts.forEach(amount => amount.addEventListener('input', updateDwtPrice));
         dwts.forEach(dwt => dwt.addEventListener('input', updateDwtPrice));
-
     }
 
     addListeners();
@@ -358,7 +351,6 @@
         addListeners();
     }
 
-    <!-- ## -->
     function updateDwtPrice() {
         const rows = document.querySelectorAll('#ktContainer .row');
         const initTotalAmount = parseFloat(document.getElementById('totalAmount').value) || 0;
@@ -402,7 +394,6 @@
         return sum;
     }
 
-    <!-- ## -->
     function addJewelryRow() {
         jewelryCount++;
         const ktOptions = ['10kt', '10kt scrap', '14kt', '14kt scrap', '18kt', '18kt scrap', '22kt', '22kt scrap'];
@@ -430,7 +421,6 @@
         document.getElementById('jewelryContainer').appendChild(row);
     }
 
-    <!-- ## -->
     function calculateJewelry() {
         const rows = document.querySelectorAll('#jewelryContainer .row');
         rows.forEach(row => {
@@ -448,7 +438,6 @@
             result.textContent = `$${(dwt * pricePerDwt).toFixed(2)}`;
         });
     }
-    <!-- ## -->
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
